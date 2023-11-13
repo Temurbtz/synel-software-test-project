@@ -1,0 +1,55 @@
+﻿@model List<Employee>
+@{
+    ViewData["Title"] = "Import Data";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Index">
+    <input type="file" name="file" />
+    <button type="submit">Import</button>
+</form>
+
+<p>Rows processed: @ViewBag.RowsProcessed</p>
+<ejs-grid id="Grid" dataSource="@Model" allowSorting="true" allowFiltering="true"
+          allowEditing="true" actionComplete="onActionComplete">
+    <e-grid-editSettings allowAdding="true" allowDeleting="true" allowEditing="true"></e-grid-editSettings>
+    <e-grid-columns>
+        <e-grid-column field="PayrollNumber" headerText="PayrollNumber"></e-grid-column>
+        <e-grid-column field="FirstName" headerText="FirstName" ></e-grid-column>
+        <e-grid-column field="Surname" headerText="Surname" ></e-grid-column>
+        <e-grid-column field="DateOfBirth" headerText="DateOfBirth"></e-grid-column>
+        <e-grid-column field="PhoneNumber" headerText="PhoneNumber"></e-grid-column>
+        <e-grid-column field="MobileNumber" headerText="MobileNumber"></e-grid-column>
+
+        <e-grid-column field="Address" headerText="Address"></e-grid-column>
+        <e-grid-column field="SecondAddress" headerText="SecondAddress"></e-grid-column>
+        <e-grid-column field="PostCode" headerText="PostCode"></e-grid-column>
+        <e-grid-column field="Email" headerText="Email"></e-grid-column>
+        <e-grid-column field="StartDate" headerText="StartDate"></e-grid-column>
+    </e-grid-columns>
+</ejs-grid>
+ 
+
+<script>
+    function onActionComplete(args) {
+        if (args.requestType === "save" && args.action === "edit") {
+            $.ajax({
+                url: '/update',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(args.data),
+                success: function (response) {
+                    // Handle the server response
+                    console.log('Server response:', response);
+                },
+                error: function (error) {
+                    // Handle the error
+                    console.error('Error:', error);
+                }
+            });
+        }
+    }
+</script>
+
+
